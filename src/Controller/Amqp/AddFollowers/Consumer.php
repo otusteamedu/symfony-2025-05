@@ -36,7 +36,6 @@ class Consumer extends AbstractConsumer
         }
 
         $this->followerService->addFollowersSync($user, $message->followerLogin, $message->count);
-        sleep(1);
 
         return self::MSG_ACK;
     }
