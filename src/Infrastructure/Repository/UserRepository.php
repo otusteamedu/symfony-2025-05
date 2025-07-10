@@ -152,4 +152,12 @@ class UserRepository extends AbstractRepository
         }
         return $this->entityManager->getRepository(User::class)->findBy(['login' => $name]);
     }
+
+    /**
+     * @return User[]
+     */
+    public function findAll(): array
+    {
+        return $this->entityManager->getRepository(User::class)->findAll();
+    }
 }
