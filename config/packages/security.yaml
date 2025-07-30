@@ -23,6 +23,7 @@ security:
             lazy: true
             stateless: true
             custom_authenticator: App\Application\Security\JwtAuthenticator
+            security: false
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
