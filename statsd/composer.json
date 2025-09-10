@@ -1,0 +1,16 @@
+{
+  "name": "otusteamedu/statsd-bundle", 
+  "version": "0.0.1",
+  "description": "Provides configured MetricsStorage to send metrics to graphite",
+  "type": "symfony-bundle",
+  "license": "MIT",
+  "require": {
+    "php": ">=8.3",
+    "slickdeals/statsd": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "StatsdBundle\\": "src/"
+    }
+  }
+}
