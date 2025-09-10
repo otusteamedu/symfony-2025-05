@@ -1,0 +1,90 @@
+@host = http://localhost:7777
+
+### Subscribe
+
+POST {{host}}/api/v1/create-paid-subscription
+Content-Type: application/json
+
+{
+  "userId": "7bc55b76-3c6b-4644-9251-9c093b2c5a16",
+  "productId": "8bc55b76-3c6b-4644-9251-9c093b2c5a17"
+}
+
+### Generate payment link
+
+GET {{host}}/api/v1/generate-payment-link/8bc55b76-3c6b-4644-9251-9c093b2c5a10
+Content-Type: application/json
+
+
+### Pay Invoice
+
+POST {{host}}/api/sales/webhooks/invoices/pay
+Content-Type: application/json
+
+{
+  "invoice_id": "8bc55b76-3c6b-4644-9251-9c093b2c5a11",
+  "transaction_id": "xxx"
+}
+
+
+### Create user
+
+POST {{host}}/api/v2/user
+Content-Type: application/json
+
+{
+    "login": "user",
+    "phone": "+79991113322",
+    "password": "password",
+    "age": 25,
+    "isActive": true,
+    "roles": []
+}
+
+
+### Synchronously add followers
+
+POST {{host}}/api/v1/add-followers/1
+Content-Type: application/json
+
+{
+    "followerLoginPrefix": "follower1",
+    "count": 10
+}
+
+
+### Asynchoronously add followers
+
+POST {{host}}/api/v1/add-followers/1
+Content-Type: application/json
+
+{
+    "followerLoginPrefix": "followerX",
+    "count": 1000,
+    "async": true
+}
+
+
+### Post tweet sync
+
+POST {{host}}/api/v1/post-tweet
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "text": "Sync tweet",
+    "async": false
+}
+
+
+### Post tweet async
+
+POST {{host}}/api/v1/post-tweet
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "text": "Async tweet",
+    "async": true
+}
+

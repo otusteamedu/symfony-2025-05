@@ -92,6 +92,9 @@
             "config/routes/nelmio_api_doc.yaml"
         ]
     },
+    "otusteamedu/statsd-bundle": {
+        "version": "0.0.1"
+    },
     "php-amqplib/rabbitmq-bundle": {
         "version": "2.17",
         "recipe": {
