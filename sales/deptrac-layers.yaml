@@ -1,0 +1,150 @@
+# Restricts DDD cross-layer dependencies with https://github.com/qossmic/deptrac
+parameters:
+  paths:
+    - ./src
+  exclude_files:
+    - '/.*psalm.*/'
+
+  layers:
+    - name: SharedKernelDomainModel
+      collectors:
+        - type: classLike
+          value: .*bravik\\Shared\\Domain\\Model\\.*
+        - type: classLike
+          value: .*bravik\\Shared\\Domain\\Events\\.*
+        - type: classLike
+          value: .*bravik\\Shared\\Domain\\Exceptions\\.*
+
+    - name: SharedKernelDomain
+      collectors:
+        - type: bool
+          must:
+            - type: classLike
+              value: .*bravik\\Shared\\Domain\\.*
+          must_not:
+            - type: layer
+              value: SharedKernelDomainModel
+
+    - name: DomainModel
+      collectors:
+        - type: classLike
+          value: .*bravik\\Sales\\Domain\\Model\\.*
+        - type: classLike
+          value: .*bravik\\Sales\\Domain\\Events\\.*
+        - type: classLike
+          value: .*bravik\\Sales\\Domain\\Exceptions\\.*
+
+
+    - name: SharedKernelApplication
+      collectors:
+        - type: bool
+          must:
+            - type: classLike
+              value: .*bravik\\Shared\\Application\\.*
+          must_not:
+            - type: layer
+              value: SharedKernelDomainModel
+
+    - name: ApplicationContract
+      collectors:
+        - type: classLike
+          value: .*bravik\\Sales\\Application\\UseCases\\.*
+
+    - name: Application
+      collectors:
+       - type: bool
+         must:
+           - type: classLike
+             value: .*bravik\\Sales\\Application\\.*
+         must_not:
+           - type: layer
+             value: ApplicationContract
+
+    - name: Domain
+      collectors:
+       - type: bool
+         must:
+           - type: classLike
+             value: .*bravik\\Sales\\Domain\\.*
+         must_not:
+           - type: layer
+             value: DomainModel
+
+    # Allow domain to use selected vendor libs
+    - name: AllowedVendors
+      collectors:
+        - type: bool
+          must:
+            - type: classLike
+              value: Psr\\.*
+          must_not:
+            - type: classLike
+              value: Psr\\.*\\Test\\.*
+        - type: classLike
+          value: Webmozart\\.*
+        - type: classLike
+          value: Doctrine\\ORM\\Mapping.*
+        - type: classLike
+          value: Doctrine\\Common\\Collections.*
+        - type: classLike
+          value: Symfony\\Component\\Uid\\Uuid.*
+
+    - name: OtherVendors
+      collectors:
+        - type: directory
+          value: '/vendor\/(?!webmozart|doctrine|psr|symfony\/uid).*/'
+
+    - name: Infrastructure
+      collectors:
+        - type: classLike
+          value: .*bravik\\Sales\\Infrastructure\\.*
+
+  ruleset:
+    SharedKernelDomainModel:
+      - AllowedVendors
+    SharedKernelDomain:
+      - SharedKernelDomainModel
+    SharedKernelApplication:
+      - SharedKernelDomainModel
+    DomainModel:
+      - SharedKernelDomainModel
+      - AllowedVendors
+    DomainContract:
+      - DomainModel
+      - Domain
+      - SharedKernelDomainModel
+      - SharedKernelDomain
+    Domain:
+      - DomainModel
+      - SharedKernelDomainModel
+      - SharedKernelDomain
+    Application:
+        - Domain
+        - DomainModel
+        - ApplicationContract
+        - SharedKernelDomainModel
+        - SharedKernelDomain
+    ApplicationContract:
+      - DomainContract
+      - DomainModel
+      - Domain
+      - Application
+      - SharedKernelDomainModel
+      - SharedKernelDomain
+      - SharedKernelApplication
+    Infrastructure:
+      - SharedKernelDomainModel
+      - SharedKernelDomain
+      - Domain
+      - DomainModel
+      - SharedKernelModel
+      - Application
+      - ApplicationContract
+      - SharedKernelApplication
+      - AllowedVendors
+      - OtherVendors
+    AllowedVendors:
+      - OtherVendors
+    OtherVendors:
+      - AllowedVendors
+
